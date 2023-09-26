@@ -55,7 +55,7 @@
 | Column               | Type       | Options                        |
 | -------------------- | ---------- | ------------------------------ |
 | post_code            | string     | null: false                    |
-| prefecture           | string     | null: false                    |
+| prefecture_id        | integer    | null: false                    |
 | area                 | string     | null: false                    |
 | address              | string     | null: false                    |
 | build_name           | string     |                                |
