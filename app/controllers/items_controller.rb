@@ -14,14 +14,14 @@ class ItemsController < ApplicationController
     if @item.save
       redirect_to items_path
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
   
 
   private
   def item_params
-    params.require(:item).permit(:name, :info, :image, :category_id, :condition_id, :del_burden_id, :prefecture_id, :del_day_id, :price)
+    params.require(:item).permit(:name, :info, :image, :category_id, :condition_id, :del_burden_id, :prefecture_id, :del_day_id, :price).merge(user_id:current_user.id)
   end
 
 end
