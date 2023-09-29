@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+         has_many :items
+
          validates :nickname, presence: { message: "can't be blank" }
 
          validates :birth_date, presence: { message: "can't be blank" }
