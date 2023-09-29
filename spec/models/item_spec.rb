@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Item, type: :model do
   before do
-    @user = FactoryBot.create(:user)
-    @item = FactoryBot.build(:item, user_id: @user.id)
+    @item = FactoryBot.build(:item)
     
   end
 
@@ -86,6 +85,43 @@ RSpec.describe Item, type: :model do
         @item.valid?
         expect(@item.errors.full_messages).to include("Price can't be blank")
       end
+
+      it 'category_idが0では登録できないこと' do
+        @item.category_id = 0
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Category can't be blank")
+      end
+
+      it 'condition_idが0では登録できないこと' do
+        @item.condition_id = 0
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Condition can't be blank")
+      end
+
+      it 'del_burden_idが0では登録できないこと' do
+        @item.del_burden_id = 0
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Del burden can't be blank")
+      end
+
+      it 'prefecture_idが0では登録できないこと' do
+        @item.prefecture_id = 0
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Prefecture can't be blank")
+      end
+
+      it 'del_day_idが0では登録できないこと' do
+        @item.del_day_id = 0
+        @item.valid?
+        expect(@item.errors.full_messages).to include("Del day can't be blank")
+      end
+
+      it 'userが紐づいていないと登録できない' do
+        @item.user = nil
+        @item.valid?
+        expect(@item.errors.full_messages).to include("User must exist")
+      end
+
     end
   end
 end
