@@ -3,9 +3,9 @@ class Item < ApplicationRecord
 
   belongs_to :category
   belongs_to :condition
-  belongs_to :delivery_burden, class_name: 'DeliveryBurden'
+  belongs_to :del_burden, class_name: 'DeliveryBurden', foreign_key: 'del_burden_id'
   belongs_to :prefecture
-  belongs_to :delivery_day, class_name: 'DeliveryDay'
+  belongs_to :del_day, class_name: 'DeliveryDay', foreign_key: 'del_day_id'
 
   has_one_attached :image
 
