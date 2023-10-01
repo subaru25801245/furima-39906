@@ -1,15 +1,14 @@
 class Item < ApplicationRecord
   extend ActiveHash::Associations::ActiveRecordExtensions
 
+  belongs_to :user
   belongs_to :category
   belongs_to :condition
   belongs_to :del_burden, class_name: 'DeliveryBurden', foreign_key: 'del_burden_id'
   belongs_to :prefecture
   belongs_to :del_day, class_name: 'DeliveryDay', foreign_key: 'del_day_id'
-
+  has_one :buy_record
   has_one_attached :image
-
-  belongs_to :user
 
   validates :image, presence: { message: "can't be blank" }
   validates :name, presence: { message: "can't be blank" }
