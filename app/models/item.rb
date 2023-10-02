@@ -2,6 +2,7 @@ class Item < ApplicationRecord
   extend ActiveHash::Associations::ActiveRecordExtensions
 
   belongs_to :user
+
   belongs_to :category
   belongs_to :condition
   belongs_to :del_burden, class_name: 'DeliveryBurden', foreign_key: 'del_burden_id'

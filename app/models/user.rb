@@ -4,6 +4,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
          has_many :items
+
          has_many :buy_records
 
          validates :nickname, presence: { message: "can't be blank" }

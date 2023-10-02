@@ -30,9 +30,10 @@
       </p>
     </div>
     <%# /支払額の表示 %>
-    
-    <%= form_with model: @buy_record_form, url: item_buy_records_path(@item), method: :post, data: { turbo: "false" }, id: 'charge-form', class: 'transaction-form-wrap', local: true do |f| %>
 
+    <%= include_gon %>
+
+    <%= form_with model: @buy_record_form, url: item_buy_records_path(@item), method: :post, data: { turbo: "false" }, id: 'charge-form', class: 'transaction-form-wrap', local: true do |f| %>
     <%= render 'shared/error_messages', model: f.object %>
 
     <%# カード情報の入力 %>
