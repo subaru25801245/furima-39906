@@ -9,8 +9,5 @@ FactoryBot.define do
     tel             { Faker::PhoneNumber.subscriber_number(length: 11) }
     token           { "tok_#{SecureRandom.hex}" }
 
-    association :user
-    association :item
-
   end
 end

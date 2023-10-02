@@ -3,7 +3,7 @@
   RSpec.describe BuyRecordForm, type: :model do
     before do
       user = FactoryBot.create(:user)  
-      item = FactoryBot.create(:item, user: user) 
+      item = FactoryBot.create(:item) 
       @buy_record_form = FactoryBot.build(:buy_record_form, user_id: user.id, item_id: item.id)  
     end
 
@@ -74,6 +74,24 @@
           @buy_record_form.tel = '090-1234-5678'
           @buy_record_form.valid?
           expect(@buy_record_form.errors.full_messages).to include('Tel is invalid. Input only number')
+        end
+
+        it 'tokenが空では購入できないこと' do
+          @buy_record_form.token = ''
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("Token can't be blank")
+        end
+      
+        it 'userが紐付いていなければ購入できないこと' do
+          @buy_record_form.user_id = nil
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("User can't be blank")
+        end
+      
+        it 'itemが紐付いていなければ購入できないこと' do
+          @buy_record_form.item_id = nil
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("Item can't be blank")
         end
       end
     end
