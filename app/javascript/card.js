@@ -1,5 +1,4 @@
 const pay = () => {
-  console.log("OK")
   if (document.getElementById('number-form') && 
       document.getElementById('expiry-form') && 
       document.getElementById('cvc-form')) {
@@ -21,6 +20,7 @@ const pay = () => {
       payjp.createToken(numberElement).then(function (response) {
         if (response.error) {
         } else {
+          const token = response.id;
           const renderDom = document.getElementById("charge-form");
           const tokenObj = `<input value=${token} name='buy_record_form[token]' type="hidden">`;
           renderDom.insertAdjacentHTML("beforeend", tokenObj);
