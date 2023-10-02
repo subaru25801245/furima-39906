@@ -1,0 +1,148 @@
+before_action :set_item, only: [:index, :create]
+
+  def index
+    gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
+    @order = Order.new
+  end
+
+  def create
+    @order = Order.new(order_params)
+    if @order.valid?
+      pay_item
+      @order.save
+      return redirect_to root_path
+    else
+      gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
+      render 'index', status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def order_params
+    params.require(:order).permit(:price).merge(token: params[:token])
+  end
+
+  def pay_item
+    Payjp.api_key = "PAYJP_SECRET_KEY"  # 自身のPAY.JPテスト秘密鍵を記述しましょう
+    Payjp::Charge.create(
+      amount: order_params[:price],  # 商品の値段
+      card: order_params[:token],    # カードトークン
+      currency: 'jpy'                 # 通貨の種類（日本円）
+    )
+  end
+
+  before_action :set_item, only: [:index, :create]
+
+  def index
+    @buy_record_form = BuyRecordForm.new
+  end
+
+  def create
+    @buy_record_form = BuyRecordForm.new(buy_record_params)
+    if @buy_record_form.save
+      redirect_to root_path
+    else
+      render :index
+    end
+  end
+
+  private
+
+  def set_item
+    @item = Item.find(params[:item_id])
+  end
+
+  def buy_record_params
+    params.require(:buy_record_form).permit(:post_code, :prefecture_id, :area, :address, :build_name, :tel).merge(item_id: params[:item_id], user_id: current_user.id)
+  end
+
+
+  belongs_to :user
+  belongs_to :items
+
+
+  attr_accessor :token
+
+  validates :price, presence: true
+  validates :token, presence: true
+
+
+
+<input type="hidden" name="authenticity_token" value="iFDueRleSWDz7xn_UH_AlX75xeAq4AEnicS-5oIPjKWa7xTC3-2awnChxe1lV9zBFRy8-EKQKmXenQbr66AVVA" autocomplete="off">
+」
+
+
+
+
+
+describe '購入情報の保存' do
+
+      context '購入情報が保存できる場合' do
+        it '全ての値が正しく入力されていれば保存できること' do
+          expect(@buy_record_form).to be_valid
+        end
+
+        it '建物名は空でも保存できること' do
+          @buy_record_form.build_name = ''
+          expect(@buy_record_form).to be_valid
+        end
+      end
+
+      context '購入情報が保存できない場合' do
+        it '郵便番号が空だと保存できないこと' do
+          @buy_record_form.post_code = ''
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("Post code can't be blank")
+        end
+
+        it '郵便番号が半角のハイフンを含んだ正しい形式でないと保存できないこと' do
+          @buy_record_form.post_code = '1234567'
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include('Post code is invalid. Enter it as follows (e.g. 123-4567)')
+        end
+
+        it '都道府県が選択されていないと保存できないこと' do
+          @buy_record_form.prefecture_id = 0
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("Prefecture can't be blank")
+        end
+
+        it '市区町村が空だと保存できないこと' do
+          @buy_record_form.area = ''
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("Area can't be blank")
+        end
+
+        it '番地が空だと保存できないこと' do
+          @buy_record_form.address = ''
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("Address can't be blank")
+        end
+
+        it '電話番号が空だと保存できないこと' do
+          @buy_record_form.tel = ''
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include("Tel can't be blank")
+        end
+
+        it '電話番号が10桁未満だと保存できないこと' do
+          @buy_record_form.tel = '090123456'
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include('Tel is too short')
+        end
+
+        it '電話番号が12桁以上だと保存できないこと' do
+          @buy_record_form.tel = '090123456789'
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include('Tel is invalid. Input only number')
+        end
+
+        it '電話番号に半角数字以外が含まれている場合は保存できないこと' do
+          @buy_record_form.tel = '090-1234-5678'
+          @buy_record_form.valid?
+          expect(@buy_record_form.errors.full_messages).to include('Tel is invalid. Input only number')
+        end
+      end
+    end
+  end
